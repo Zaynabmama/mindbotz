@@ -217,6 +217,77 @@ with c2:
     st.metric("After (h/year)",  f"{after_yr:,.1f}")
     st.metric("Saved (h/year)",  f"{saved_yr:,.1f}")
     st.markdown('</div>', unsafe_allow_html=True)
+# ======================================================
+# 🧠 EXECUTIVE SUMMARY (Dark Mode Compatible)
+# ======================================================
+st.markdown("### 🧠 Executive Summary")
+
+weeks_saved = saved_yr / 40.0
+
+components_dict = {
+    "Impact": I,
+    "Usage": U,
+    "Business": B,
+    "Quality": Q,
+    "Growth": F
+}
+strongest = max(components_dict, key=components_dict.get)
+weakest = min(components_dict, key=components_dict.get)
+
+summary_html = f"""
+<div style="
+    background-color: #FFFFFF;
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 5px solid #4A90E2;
+    margin-bottom: 20px;
+">
+<div style="color:#000000; font-size:16px; line-height:1.6;">
+
+This automation saves <strong style="color:#000000;">{saved_yr:,.0f} hours per year</strong>,
+which equals <strong style="color:#000000;">{weeks_saved:.1f} working weeks</strong> of productivity gained.<br><br>
+
+It achieves a <strong style="color:#000000;">MIVE+Dev score of {final_score:.1f}</strong>, reflecting strong overall value.<br><br>
+
+<strong style="color:#000000;">Strongest area:</strong> {strongest}<br>
+<strong style="color:#000000;">Opportunity for improvement:</strong> {weakest}<br><br>
+
+Development effort was <strong style="color:#000000;">{dev_hours:.0f} hours</strong>, aligned with the value delivered.<br><br>
+
+<strong style="color:#000000;">Recommendation:</strong> Expand adoption across additional teams to maximize organizational benefit.
+
+</div>
+</div>
+"""
+
+st.markdown(summary_html, unsafe_allow_html=True)
+# ======================================================
+# BAR CHART — Before vs After Hours
+# ======================================================
+st.markdown("### 📉 Before vs After — Annual Hours")
+
+fig3, ax3 = plt.subplots(figsize=(6,4))
+
+# Bars
+ax3.bar(["Before", "After"], [before_yr, after_yr],
+        color=["#D9534F", "#5CB85C"], width=0.6)
+
+# Labels and title
+ax3.set_ylabel("Hours per Year")
+ax3.set_title("Annual Effort Comparison")
+
+# Add value labels on bars
+for i, value in enumerate([before_yr, after_yr]):
+    ax3.text(
+        i,
+        value + max(before_yr, after_yr) * 0.03,
+        f"{value:,.1f}",
+        ha='center',
+        fontsize=12,
+        fontweight='bold'
+    )
+
+st.pyplot(fig3)
 
 with c3:
     st.markdown('<div class="metric-box">', unsafe_allow_html=True)
